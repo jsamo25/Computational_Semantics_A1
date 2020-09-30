@@ -4,10 +4,10 @@ pd.set_option("display.max_columns", 99)
 data = pd.read_csv("sentiment10.csv")
 
 #10, 11, 12, 13
-# print(data.shape)
-# print(data[:3])
-# print(data["sentiment"])
-# print(data["sentiment"].unique())
+print(data.shape)
+print(data[:3])
+print(data["sentiment"])
+print(data["sentiment"].unique())
 
 #15, 16, 17, 18
 
