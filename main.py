@@ -8,7 +8,7 @@ data = pd.read_csv("sentiment10.csv")
 
 def part_b():
     #10, 11, 12, 13
-    print(data.shape)
+    #print(data.shape)
     # print(data[:3])
     # print(data["sentiment"])
     # print(data["sentiment"].unique())
@@ -26,6 +26,10 @@ def part_b():
     data['tokens'] = data['text'].apply(nltk.tokenize.word_tokenize)
     data['n_tokens'] = data['tokens'].apply(lambda x: len(x))
     #data['n_tokens'] = data['tokens'].str.len()
-    print(data)
 
+    #print(data)
+    #21, mean, standard deviation
+    print("Mean Values\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].mean())
+    print("\n Standard deviation Values\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].std())
+    #print("Data Statistics", "\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].describe())
 part_b()
