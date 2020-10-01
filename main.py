@@ -1,10 +1,12 @@
 import pandas as pd
+import numpy as np
 import nltk
+import matplotlib.pyplot as plt
 
 """ Getting Started """
 pd.set_option("display.max_columns", 99)
-data = pd.read_csv("sentiment10.csv")
-
+#data = pd.read_csv("sentiment10.csv")
+data = pd.read_csv("sentiment.csv")
 
 def part_b():
     #10, 11, 12, 13
@@ -32,4 +34,9 @@ def part_b():
     print("Mean Values\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].mean())
     print("\n Standard deviation Values\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].std())
     #print("Data Statistics", "\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].describe())
+
+    #Histogram of the rating column fo the DataFrame sentiment.
+    plt.hist(data["rating"])
+    plt.grid(True)
+    plt.show()
 part_b()
