@@ -60,7 +60,7 @@ data['n_tokens'] = data['tokens'].apply(lambda x: len(x))
 
 #29 Number of positive & Number of negative words based on polarity lexicon. Figure 21.3 https://web.stanford.edu/~jurafsky/slp3/21.pdf
 #TODO: add more Lexicons to improve precision
-#FIXME WORK with lemmatized tokens
+#FIXME lemmatized tokens will improve the performance?
 positive_lexicons = ["admire", "amazing", "assure", "celebration", "charm", "eager", "enthusiastic", "excellent",
                      "fancy", "fantastic", "frolic", "graceful", "happy", "joy", "luck", "majesty", "mercy", "nice",
                      "patience", "perfect", "proud", "rejoice", "relief", "respect", "satisfactorily", "sensational",
@@ -71,14 +71,14 @@ negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "ch
                      "reject", "scream", "silly", "terrible", "unfriendly","vile", "wicked"]
 
 def positive_lex_n(text):
-    computed_feature = len([lexicon for lexicon in positive_lexicons if lexicon in text])
+    computed_feature = sum(lexicon in positive_lexicons for lexicon in text)
     return computed_feature
 
 data['positive_lex_n'] = data['tokens'].apply(positive_lex_n)
 print(data["positive_lex_n"])
 
 def negative_lex_n(text):
-    computed_feature = len([lexicon for lexicon in negative_lexicons if lexicon in text])
+    computed_feature = sum(lexicon in negative_lexicons for lexicon in text)
     return computed_feature
 
 data['negative_lex_n'] = data['tokens'].apply(negative_lex_n)
