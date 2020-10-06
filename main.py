@@ -3,13 +3,17 @@ import numpy as np
 import nltk
 import matplotlib.pyplot as plt
 
-""" Getting Started """
-pd.set_option("display.max_columns", 99)
-data = pd.read_csv("sentiment10.csv")
-#data = pd.read_csv("sentiment.csv")
-print(data["text"])
+def part_a():
+    # TODO: make use of a TRIAL variable to switch between the different data sets (Part B).
+    pd.set_option("display.max_columns", 99)
+    data = pd.read_csv("sentiment10.csv")
+    #data = pd.read_csv("sentiment.csv")
+    #print(data["text"])
+    return data
 
 def part_b():
+    #TODO: create better functions, maybe a menu?
+    data = part_a()
     #10, 11, 12, 13
     print(data.shape)
     print(data[:3])
@@ -41,16 +45,31 @@ def part_b():
     print("Data Description\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].describe())
     plt.grid(True)
     plt.show()
+
 def part_c():
-    #25The use of features may help to create tendencies, make predictions
+    data = part_a()
+    #25The use of features may help to create functions, and later make predictions
     #26 Times that appear the word bad, Times that appear the word good, capitalized words?, exclamation marks?
     #27 selected feature: Times that appear the word "good"
+#TODO: Find a better feature, "good" or "bad" wont appear all the time, default neutral? (what about negations? i.e not good, not bad. And Sarcasm?)
+    # def n_good(text):
+    #     computed_feature = text.count('good')
+    #     return computed_feature
+    #
+    # data['n_good'] = data['text'].apply(n_good)
+    # print(data["n_good"])
 
-    def n_good(text):
-        computed_feature = text.count('good')
-        return computed_feature
+#29 Number of positive & Number of negative words based on polarity lexicon. Figure 21.3 https://web.stanford.edu/~jurafsky/slp3/21.pdf
+    positive_lexicons = ["admire", "amazing", "assure", "celebration", "charm", "eager", "enthusiastic", "excellent",
+                         "fancy", "fantastic", "frolic", "graceful", "happy", "joy", "luck", "majesty", "mercy", "nice",
+                         "patience", "perfect", "proud", "rejoice", "relief", "respect", "satisfactorily", "sensational",
+                         "super", "terrific", "thank", "vivid", "wise", "wonderful", "zest", "good"]
+    negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "cheap", "complaint", "condescending",
+                         "deceit","defective", "disappointment", "embarrass", "fake", "fear", "filthy", "fool", "guilt",
+                         "hate", "idiot", "inflict", "lazy", "miserable", "mourn", "nervous", "objection", "pest", "plot",
+                         "reject", "scream", "silly", "terrible", "unfriendly","vile", "wicked"]
 
-    data['n_good'] = data['text'].apply(n_good)
-    print(data["n_good"])
+
+
 
 part_c()
