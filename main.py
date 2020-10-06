@@ -3,14 +3,14 @@ import numpy as np
 import nltk
 import matplotlib.pyplot as plt
 
-""" PART A """
+""" PART A: Getting started """
 # TODO: make use of a TRIAL variable to switch between the different data sets (Part B).
 pd.set_option("display.max_columns", 99)
-data = pd.read_csv("sentiment10.csv")
-#data = pd.read_csv("sentiment.csv")
+#data = pd.read_csv("sentiment10.csv")
+data = pd.read_csv("sentiment.csv")
 #print(data["text"])
 
-""" PART B"""
+""" PART B: Loading and inspecting the data"""
 #TODO: create better functions, maybe a menu?
 #FIXME: change commented prints before submitting
 #10, 11, 12, 13
@@ -45,7 +45,7 @@ data['n_tokens'] = data['tokens'].apply(lambda x: len(x))
 # plt.grid(True)
 # plt.show()
 
-""" PART C """
+""" PART C: Compute features for sentiment classification"""
 #25The use of features may help to create functions, and later make predictions
 #26 Times that appear the word bad, Times that appear the word good, capitalized words?, exclamation marks?
 #27 selected feature: Times that appear the word "good"
@@ -59,31 +59,32 @@ data['n_tokens'] = data['tokens'].apply(lambda x: len(x))
 # print(data["n_good"])
 
 #29 Number of positive & Number of negative words based on polarity lexicon. Figure 21.3 https://web.stanford.edu/~jurafsky/slp3/21.pdf
+#TODO: add more Lexicons to improve precision
+#FIXME WORK with lemmatized tokens
 positive_lexicons = ["admire", "amazing", "assure", "celebration", "charm", "eager", "enthusiastic", "excellent",
                      "fancy", "fantastic", "frolic", "graceful", "happy", "joy", "luck", "majesty", "mercy", "nice",
                      "patience", "perfect", "proud", "rejoice", "relief", "respect", "satisfactorily", "sensational",
-                     "super", "terrific", "thank", "vivid", "wise", "wonderful", "zest", "good"]
+                     "super", "terrific", "thank", "vivid", "wise", "wonderful", "zest", "good", "great"]
 negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "cheap", "complaint", "condescending",
                      "deceit","defective", "disappointment", "embarrass", "fake", "fear", "filthy", "fool", "guilt",
                      "hate", "idiot", "inflict", "lazy", "miserable", "mourn", "nervous", "objection", "pest", "plot",
                      "reject", "scream", "silly", "terrible", "unfriendly","vile", "wicked"]
 
 def positive_lex_n(text):
-    computed_feature = 0
-    for word in text:
-        if word in positive_lexicons:
-            computed_feature += 1
+    computed_feature = len([lexicon for lexicon in positive_lexicons if lexicon in text])
     return computed_feature
 
 data['positive_lex_n'] = data['tokens'].apply(positive_lex_n)
 print(data["positive_lex_n"])
 
 def negative_lex_n(text):
-    computed_feature = 0
-    for word in text:
-        if word in negative_lexicons:
-            computed_feature += 1
+    computed_feature = len([lexicon for lexicon in negative_lexicons if lexicon in text])
     return computed_feature
 
 data['negative_lex_n'] = data['tokens'].apply(negative_lex_n)
 print(data["negative_lex_n"])
+
+""" PART D: Code Cleaning: current status: messy"""
+
+""" PART E: Generate predictions based on the features """
+#35
