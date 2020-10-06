@@ -122,24 +122,23 @@ def rule_3(positive, negative):
 
 data["predicted_by_rule_3"] = data[["positive_lex_n", "negative_lex_n"]].apply(lambda x: rule_3(*x), axis=1)
 print(data["predicted_by_rule_3"])
-#39
+
+#39 Baseline predictions
 
 def always_true(text):
-    if len(text)> 0:
-        prediction = True
-    return prediction
+    return True
 data["baseline_pos"] = data["text"].apply(always_true)
 print(data["baseline_pos"])
 
 def always_false(text):
-    if len(text) >0:
-        prediction = False
-    return prediction
+    return False
 data["baseline_neg"] = data["text"].apply(always_false)
 print(data["baseline_neg"])
 
 def always_random(text):
-    prediction = random.choice([True, False])
-    return prediction
+    list= (True, False)
+    prediction = np.random.choice(list, 1, p = [0.75, 0.25])
+    return prediction[0]
+
 data["baseline_ran"] = data["text"].apply(always_random)
 print(data["baseline_ran"])
