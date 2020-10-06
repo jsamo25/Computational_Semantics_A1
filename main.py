@@ -109,20 +109,37 @@ def rule_2(feature1, feature2):
 
 data["predicted_by_rule_2"] = data[["positive_lex_n", "negative_lex_n"]].apply(lambda x: rule_2(*x), axis=1)
 #print(data["predicted_by_rule_2"])
-#39
 
-def base_line_predictions(positive, negative):
-    list = [True, False]
+def rule_3(positive, negative):
     if positive > 2* negative:
         computed_prediction = True
     elif negative > 2* positive:
         computed_prediction = False
     else:
-        computed_prediction = random.choice(list)
+        computed_prediction = random.choice([True, False])
         #TODO: add bias based on... !!
     return computed_prediction
 
-data["base_line_prediction"] = data[["positive_lex_n", "negative_lex_n"]].apply(lambda x: base_line_predictions(*x), axis=1)
-print(data["base_line_prediction"])
+data["predicted_by_rule_3"] = data[["positive_lex_n", "negative_lex_n"]].apply(lambda x: rule_3(*x), axis=1)
+print(data["predicted_by_rule_3"])
+#39
 
-#0, 1, 7 always true, others should be random
+def always_true(text):
+    if len(text)> 0:
+        prediction = True
+    return prediction
+data["baseline_pos"] = data["text"].apply(always_true)
+print(data["baseline_pos"])
+
+def always_false(text):
+    if len(text) >0:
+        prediction = False
+    return prediction
+data["baseline_neg"] = data["text"].apply(always_false)
+print(data["baseline_neg"])
+
+def always_random(text):
+    prediction = random.choice([True, False])
+    return prediction
+data["baseline_ran"] = data["text"].apply(always_random)
+print(data["baseline_ran"])
