@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 """ PART A: Getting started """
 # TODO: make use of a TRIAL variable to switch between the different data sets (Part B).
 pd.set_option("display.max_columns", 99)
-#data = pd.read_csv("sentiment10.csv")
-data = pd.read_csv("sentiment.csv")
+data = pd.read_csv("sentiment10.csv")
+#data = pd.read_csv("sentiment.csv")
 #print(data["text"])
 
 """ PART B: Loading and inspecting the data"""
@@ -87,4 +87,25 @@ print(data["negative_lex_n"])
 """ PART D: Code Cleaning: current status: messy"""
 
 """ PART E: Generate predictions based on the features """
-#35
+#35, 36
+
+def rule_1(feature):
+    if feature > 2:
+        prediction = True
+    else:
+        prediction = False
+    return prediction
+
+data["predicted_by_rule_1"] = data["positive_lex_n"].apply(rule_1)
+#print(data["predicted_by_rule_1"])
+
+def rule_2(feature1, feature2):
+    if feature1 > feature2:
+        prediction = True
+    else:
+        prediction = False
+    return prediction
+
+data["predicted_by_rule_2"] = data[["positive_lex_n", "negative_lex_n"]].apply(lambda x: rule_2(*x), axis=1)
+print(data["predicted_by_rule_2"])
+#39
