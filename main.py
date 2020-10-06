@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import nltk
 import matplotlib.pyplot as plt
+import random
 
 """ PART A: Getting started """
 # TODO: make use of a TRIAL variable to switch between the different data sets (Part B).
@@ -107,5 +108,21 @@ def rule_2(feature1, feature2):
     return prediction
 
 data["predicted_by_rule_2"] = data[["positive_lex_n", "negative_lex_n"]].apply(lambda x: rule_2(*x), axis=1)
-print(data["predicted_by_rule_2"])
+#print(data["predicted_by_rule_2"])
 #39
+
+def base_line_predictions(positive, negative):
+    list = [True, False]
+    if positive > 2* negative:
+        computed_prediction = True
+    elif negative > 2* positive:
+        computed_prediction = False
+    else:
+        computed_prediction = random.choice(list)
+        #TODO: add bias based on... !!
+    return computed_prediction
+
+data["base_line_prediction"] = data[["positive_lex_n", "negative_lex_n"]].apply(lambda x: base_line_predictions(*x), axis=1)
+print(data["base_line_prediction"])
+
+#0, 1, 7 always true, others should be random
