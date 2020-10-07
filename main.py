@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 import random
 
 from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
 
-pd.set_option("display.max_columns", 99)
+pd.set_option("display.max_columns", 10)
 
 """ PART A: Getting started """
 #FIXME: hardcoded "data" to work with full data set to avoid the input step. (remove commented line)
@@ -20,7 +21,7 @@ def TRIAL(value):
         print("Using sample data set")
     return data
 
-value = 0#input("input 1 to select the full data set, press anykey to select the sampled version: ")
+value = 1#input("input 1 to select the full data set, press anykey to select the sampled version: ")
 data = TRIAL(int(value))
 
 """ PART B: Loading and inspecting the data"""
@@ -129,7 +130,7 @@ print(data["baseline_neg"])
 #FIXME: using fixed value, remove commented line below to use True/False ratio
 p = 0.75
 #p = data["sentiment"].mean()
-print("probability is the ratio of True/False values from the [sentiment] column: \n", p)
+print("probability is the ratio of True/False values from the [sentiment] column:", p)
 
 def always_random(text):
     list= (True, False)
@@ -141,12 +142,36 @@ print(data["baseline_ran"])
 
 """ PART F: Evaluating the predictions, tweaking the rules """
 #TODO: shoould one present the accuracy as its decimal form or % ?
-#41 accuracy for rules 1, 2, 3
-print("accuracy value for rule 1 [based on # positive lexicons [treshold pos>2, def. neg.]]\n:", accuracy_score(data["sentiment"],data["predicted_by_rule_1"]))
+#41 accuracy for rules 1, 2, 3  + baselines (using sklearn)
+print("accuracy value for rule 1 [based on # positive lexicons [threshold pos>2, def. neg.]]\n:", accuracy_score(data["sentiment"],data["predicted_by_rule_1"]))
 print("accuracy value for rule 2 [based on # positive Vs. negative lexicons [default neg.]] \n:", accuracy_score(data["sentiment"],data["predicted_by_rule_2"]))
 print("accuracy value for rule 3 [based on # positive Vs. negative lexicons [default rand]]\n:", accuracy_score(data["sentiment"],data["predicted_by_rule_3"]))
 #42 accuracy for baseline predictions
 print("accuracy value for baseline [all positive] \n:", accuracy_score(data["sentiment"],data["baseline_pos"]))
 print("accuracy value for baseline [all negative] \n:", accuracy_score(data["sentiment"],data["baseline_neg"]))
 print("accuracy value for baseline [all random] \n:", accuracy_score(data["sentiment"],data["baseline_ran"]))
+#41 accuracy for baselines
+def accuracy (target, prediction):
+    correct = target == prediction
+    return correct.mean()
+
+print("\n Using the requested method for the Assigment\n")
+print("accuracy positive baseline", accuracy(data["sentiment"],data["baseline_pos"]))
+print("accuracy negative baseline", accuracy(data["sentiment"],data["baseline_neg"]))
+print("accuracy random baseline", accuracy(data["sentiment"],data["baseline_ran"]))
+#45
+#46 Overfitting
+
+""" PART G: Logistic regression """
+#48
+#TODO Divide into Training / Test data
+X = data[["positive_lex_n","negative_lex_n"]]
+Y = data["sentiment"]
+
+#49https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html
+model = LogisticRegression().fit(X,Y)
+data["log_reg_prediction"] = model.predict(X)
+print("\n logistic regression score:", model.score(X,Y))
+
+""" PART H: More evaluation: confusion matrix; different evaluation metrics """
 
