@@ -20,7 +20,7 @@ def TRIAL(value):
         print("Using sample data set")
     return data
 
-value = 1#input("input 1 to select the full data set, press anykey to select the sampled version: ")
+value = 0#input("input 1 to select the full data set, press anykey to select the sampled version: ")
 data = TRIAL(int(value))
 
 """ PART B: Loading and inspecting the data"""
@@ -62,9 +62,7 @@ plt.show()
 #27 selected feature: Times that appear the word "good"
 
 def n_good(text):
-    computed_feature = text.count('good')
-    return computed_feature
-
+    return text.count('good')
 data['n_good'] = data['text'].apply(n_good)
 print(data["n_good"])
 
@@ -80,16 +78,12 @@ negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "ch
                      "reject", "scream", "silly", "terrible", "unfriendly","vile", "wicked"]
 
 def positive_lex_n(text):
-    computed_feature = sum(lexicon in positive_lexicons for lexicon in text)
-    return computed_feature
-
+    return sum(lexicon in positive_lexicons for lexicon in text)
 data['positive_lex_n'] = data['tokens'].apply(positive_lex_n)
 print(data["positive_lex_n"])
 
 def negative_lex_n(text):
-    computed_feature = sum(lexicon in negative_lexicons for lexicon in text)
-    return computed_feature
-
+    return sum(lexicon in negative_lexicons for lexicon in text)
 data['negative_lex_n'] = data['tokens'].apply(negative_lex_n)
 print(data["negative_lex_n"])
 
@@ -100,52 +94,41 @@ print(data["negative_lex_n"])
 #35, 36
 def rule_1(feature):
     if feature > 2:
-        prediction = True
+        return True
     else:
-        prediction = False
-    return prediction
-
+        return False
 data["predicted_by_rule_1"] = data["positive_lex_n"].apply(rule_1)
 print(data["predicted_by_rule_1"])
 
 def rule_2(feature1, feature2):
     if feature1 > feature2:
-        prediction = True
+        return True
     else:
-        prediction = False
-    return prediction
-
+        return False
 data["predicted_by_rule_2"] = data[["positive_lex_n", "negative_lex_n"]].apply(lambda x: rule_2(*x), axis=1)
 print(data["predicted_by_rule_2"])
 
 def rule_3(positive, negative):
     if positive > 2* negative:
-        computed_prediction = True
+        return True
     elif negative > 2* positive:
-        computed_prediction = False
+        return False
     else:
-        computed_prediction = random.choice([True, False])
-    return computed_prediction
-
+        return random.choice([True, False])
 data["predicted_by_rule_3"] = data[["positive_lex_n", "negative_lex_n"]].apply(lambda x: rule_3(*x), axis=1)
 print(data["predicted_by_rule_3"])
 
 #39 Baseline predictions
-#FIXME: getting always TRUE/FALSE won't require to pass "text" args; change for an existing pandas method.
 
-def always_true(text):
-    return True
-data["baseline_pos"] = data["text"].apply(always_true)
+data["baseline_pos"] = True
 print(data["baseline_pos"])
 
-def always_false(text):
-    return False
-data["baseline_neg"] = data["text"].apply(always_false)
+data["baseline_neg"] = False
 print(data["baseline_neg"])
 
 #FIXME: using fixed value, remove commented line below to use True/False ratio
 p = 0.75
-#p = abs(data["sentiment"].values.sum()/(~data["sentiment"].values.sum()))
+#p = data["sentiment"].mean()
 print("probability is the ratio of True/False values from the [sentiment] column: \n", p)
 
 def always_random(text):
