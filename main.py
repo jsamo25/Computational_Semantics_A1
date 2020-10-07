@@ -20,7 +20,7 @@ def TRIAL(value):
         print("Using sample data set")
     return data
 
-value = 0#input("input 1 to select the full data set, press anykey to select the sampled version: ")
+value = 1#input("input 1 to select the full data set, press anykey to select the sampled version: ")
 data = TRIAL(int(value))
 
 """ PART B: Loading and inspecting the data"""
@@ -143,8 +143,9 @@ def always_false(text):
 data["baseline_neg"] = data["text"].apply(always_false)
 print(data["baseline_neg"])
 
-#p = [0.75, 0.25])
-p = abs(data["sentiment"].values.sum()/(~data["sentiment"].values.sum()))
+#FIXME: using fixed value, remove commented line below to use True/False ratio
+p = 0.75
+#p = abs(data["sentiment"].values.sum()/(~data["sentiment"].values.sum()))
 print("probability is the ratio of True/False values from the [sentiment] column: \n", p)
 
 def always_random(text):
@@ -158,9 +159,9 @@ print(data["baseline_ran"])
 """ PART F: Evaluating the predictions, tweaking the rules """
 #TODO: shoould one present the accuracy as its decimal form or % ?
 #41 accuracy for rules 1, 2, 3
-print("accuracy value for rule 1 [based on # positive lexicons]\n:", accuracy_score(data["sentiment"],data["predicted_by_rule_1"]))
-print("accuracy value for rule 2 [based on # positive Vs. negative lexicons] \n:", accuracy_score(data["sentiment"],data["predicted_by_rule_2"]))
-print("accuracy value for rule 3 [based on # positive Vs. negative lexicons + random as tie breaker]\n:", accuracy_score(data["sentiment"],data["predicted_by_rule_3"]))
+print("accuracy value for rule 1 [based on # positive lexicons [treshold pos>2, def. neg.]]\n:", accuracy_score(data["sentiment"],data["predicted_by_rule_1"]))
+print("accuracy value for rule 2 [based on # positive Vs. negative lexicons [default neg.]] \n:", accuracy_score(data["sentiment"],data["predicted_by_rule_2"]))
+print("accuracy value for rule 3 [based on # positive Vs. negative lexicons [default rand]]\n:", accuracy_score(data["sentiment"],data["predicted_by_rule_3"]))
 #42 accuracy for baseline predictions
 print("accuracy value for baseline [all positive] \n:", accuracy_score(data["sentiment"],data["baseline_pos"]))
 print("accuracy value for baseline [all negative] \n:", accuracy_score(data["sentiment"],data["baseline_neg"]))
