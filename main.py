@@ -97,7 +97,6 @@ print(data["negative_lex_n"])
 
 """ PART E: Generate predictions based on the features """
 #35, 36
-
 def rule_1(feature):
     if feature > 2:
         prediction = True
@@ -131,7 +130,7 @@ data["predicted_by_rule_3"] = data[["positive_lex_n", "negative_lex_n"]].apply(l
 print(data["predicted_by_rule_3"])
 
 #39 Baseline predictions
-#FIXME: getting always true won't require to pass "text" args; change for an existing pandas method.
+#FIXME: getting always TRUE/FALSE won't require to pass "text" args; change for an existing pandas method.
 
 def always_true(text):
     return True
@@ -151,7 +150,7 @@ def always_random(text):
 data["baseline_ran"] = data["text"].apply(always_random)
 print(data["baseline_ran"])
 
-""" PART F: Evaluating the predictions, tweaking the rule """
+""" PART F: Evaluating the predictions, tweaking the rules """
 #TODO: shoould one present the accuracy as its decimal form or % ?
 #41 accuracy for rules 1, 2, 3
 print("accuracy value for rule 1 [based on # positive lexicons]\n:", accuracy_score(data["sentiment"],data["predicted_by_rule_1"]))
