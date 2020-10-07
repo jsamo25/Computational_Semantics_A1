@@ -10,6 +10,7 @@ pd.set_option("display.max_columns", 99)
 
 """ PART A: Getting started """
 #FIXME: hardcoded "data" to work with full data set to avoid the input step. (remove commented line)
+#TODO: also, not sure if i took the right approach, since not using a Boolean condition, but an if-rule instead.
 def TRIAL(value):
     if value == 1:
         data = pd.read_csv("sentiment.csv")
@@ -19,7 +20,7 @@ def TRIAL(value):
         print("Using sample data set")
     return data
 
-value = 1#input("input 1 to select the full data set, press anykey to select the sampled version: ")
+value = 0#input("input 1 to select the full data set, press anykey to select the sampled version: ")
 data = TRIAL(int(value))
 
 """ PART B: Loading and inspecting the data"""
@@ -142,9 +143,13 @@ def always_false(text):
 data["baseline_neg"] = data["text"].apply(always_false)
 print(data["baseline_neg"])
 
+#p = [0.75, 0.25])
+p = abs(data["sentiment"].values.sum()/(~data["sentiment"].values.sum()))
+print("probability is the ratio of True/False values from the [sentiment] column: \n", p)
+
 def always_random(text):
     list= (True, False)
-    prediction = np.random.choice(list, 1, p = [0.75, 0.25])
+    prediction = np.random.choice(list, 1, p = [p, 1-p])
     return prediction[0]
 
 data["baseline_ran"] = data["text"].apply(always_random)
