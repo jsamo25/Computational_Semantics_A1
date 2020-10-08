@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
-import nltk
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import nltk
 import random
 
 from sklearn.metrics import accuracy_score
@@ -52,10 +53,11 @@ print("\n Standard deviation Values\n",data[["rating", "sentiment", "n_character
 #print("Data Statistics", "\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].describe())
 
 #22 Histogram of the rating column fo the DataFrame sentiment.
-plt.hist(data["rating"])
+#FIXME: commented lines to avoid the Histogram extra window
 print("Data Description\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].describe())
-plt.grid(True)
-plt.show()
+# plt.hist(data["rating"])
+# plt.grid(True)
+# plt.show()
 
 """ PART C: Compute features for sentiment classification"""
 #25The use of features may help to create functions, and later make predictions
@@ -165,13 +167,20 @@ print("accuracy random baseline", accuracy(data["sentiment"],data["baseline_ran"
 """ PART G: Logistic regression """
 #48
 #TODO Divide into Training / Test data
-X = data[["positive_lex_n","negative_lex_n"]]
+X = data[["positive_lex_n","negative_lex_n", "n_tokens", "n_characters"]]
 Y = data["sentiment"]
 
 #49https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html
 model = LogisticRegression().fit(X,Y)
+#50 pedictions
 data["log_reg_prediction"] = model.predict(X)
-print("\n logistic regression score:", model.score(X,Y))
 
 """ PART H: More evaluation: confusion matrix; different evaluation metrics """
+#52 using accuracy function defined in #1; also using model.score()
+print("\n Accuracy value of the log_reg model",accuracy(data["sentiment"], data["log_reg_prediction"]))
+print("\n logistic regression score:", model.score(X,Y))
 
+#53 Using statsmodels library, to get coefficients and their associated probabilities // following https://stackoverflow.com/questions/57924484/finding-coefficients-for-logistic-regression-in-python
+print(sm.Logit(Y,X).fit().summary())
+
+#55 using crosstab()
