@@ -60,7 +60,7 @@ print("Data Description\n",data[["rating", "sentiment", "n_characters", "n_token
 # plt.show()
 
 """ PART C: Compute features for sentiment classification"""
-#25The use of features may help to create functions, and later make predictions
+#25 The use of features may help to create functions, and later make predictions
 #26 Times that appear the word bad, Times that appear the word good, capitalized words?, exclamation marks?
 #27 selected feature: Times that appear the word "good"
 
@@ -80,13 +80,13 @@ negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "ch
                      "hate", "idiot", "inflict", "lazy", "miserable", "mourn", "nervous", "objection", "pest", "plot",
                      "reject", "scream", "silly", "terrible", "unfriendly","vile", "wicked"]
 
-def positive_lex_n(text):
-    return sum(lexicon in positive_lexicons for lexicon in text)
+def positive_lex_n(tokens):
+    return sum(lexicon in positive_lexicons for lexicon in tokens)
 data['positive_lex_n'] = data['tokens'].apply(positive_lex_n)
 print(data["positive_lex_n"])
 
-def negative_lex_n(text):
-    return sum(lexicon in negative_lexicons for lexicon in text)
+def negative_lex_n(tokens):
+    return sum(lexicon in negative_lexicons for lexicon in tokens)
 data['negative_lex_n'] = data['tokens'].apply(negative_lex_n)
 print(data["negative_lex_n"])
 
@@ -124,17 +124,16 @@ print(data["predicted_by_rule_3"])
 #39 Baseline predictions
 
 data["baseline_pos"] = True
-print(data["baseline_pos"])
-
+#print(data["baseline_pos"])
 data["baseline_neg"] = False
-print(data["baseline_neg"])
+#print(data["baseline_neg"])
 
 #FIXME: using fixed value, remove commented line below to use True/False ratio
 p = 0.75
 #p = data["sentiment"].mean()
 print("probability is the ratio of True/False values from the [sentiment] column:", p)
 
-def always_random(text):
+def always_random(arg):
     list= (True, False)
     prediction = np.random.choice(list, 1, p = [p, 1-p])
     return prediction[0]
