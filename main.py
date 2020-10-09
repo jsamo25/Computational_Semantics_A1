@@ -7,7 +7,7 @@ import random
 
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
-
+from pdb import set_trace
 pd.set_option("display.max_columns", 10)
 
 """ PART A: Getting started """
@@ -24,6 +24,7 @@ def TRIAL(value):
 
 value = 1#input("input 1 to select the full data set, press anykey to select the sampled version: ")
 data = TRIAL(int(value))
+
 
 """ PART B: Loading and inspecting the data"""
 #FIXME: remove commented lines
@@ -165,7 +166,6 @@ print("accuracy random baseline", accuracy(data["sentiment"],data["baseline_ran"
 
 """ PART G: Logistic regression """
 #48
-#TODO Divide into Training / Test data
 X = data[["positive_lex_n","negative_lex_n", "n_tokens", "n_characters"]]
 Y = data["sentiment"]
 
