@@ -38,6 +38,7 @@ negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "ch
     PART J. Basic tasks and data exploration 
 *********************************************************"""
 
+
 # 2. #Initial text analysis and basic statistics of the dataset.
 data["sentences"] = data["text"].apply(nltk.tokenize.sent_tokenize)
 data["tokens"]    = data["text"].apply(nltk.tokenize.word_tokenize)
@@ -69,11 +70,13 @@ print("sentences average per sentiment\n", sent_avg_per_sentiment)
 print("word average per sentiment\n", word_avg_per_sentiment)
 
 
+
 """*********************************************************
     PART K. Logistic regression with hand-chosen features 
 *********************************************************"""
 
-# 5. TODO: using [rating] felt a bit of cheating so I removed that from my list.
+
+# 5. using [rating] felt a bit of cheating so I removed that from my list.
 print("Selected features:"
                         "\n [n_characters]"
                         "\n [n_tokens]"
@@ -82,18 +85,25 @@ print("Selected features:"
                         "\n [n_negative_lex]")
 
 # 6. Logistic regression
-data_train, data_test = train_test_split(data, test_size=0.2)
+data_train, data_test = train_test_split(data, test_size=0.4)
 y_train, y_test = data_train["sentiment"], data_test["sentiment"]
 x_train, x_test = (
                   data_train[["n_characters", "n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]],
-                  data_test[["n_characters", "n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]],)
+                   data_test[["n_characters", "n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]],)
 
 model = LogisticRegression(max_iter=1000).fit(x_train, y_train)
 y_pred = model.predict(x_test)
 
+print("\nmodel score with [hand-chosen features]")
+print("training set score: ", model.score(x_train,y_train))
+print("testing set score:  ", model.score(x_test, y_test))
+
 # 7. Evaluation Results || Compute confusion matrix
 # based on: https://towardsdatascience.com/demystifying-confusion-matrix-confusion-9e82201592fd
-def plot_confusion_matrix(cm, classes,normalize=False,title="Confusion matrix",cmap=plt.cm.Blues):
+def plot_confusion_matrix(cm, classes,
+                          normalize=False,
+                          title="Confusion matrix",
+                          cmap=plt.cm.Blues):
     if normalize:
         cm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
         print("Normalized confusion matrix")
@@ -121,6 +131,7 @@ def plot_confusion_matrix(cm, classes,normalize=False,title="Confusion matrix",c
     plt.tight_layout()
 
 # Compute confusion matrix
+print("\n\n")
 cnf_matrix = confusion_matrix(y_test, y_pred)
 np.set_printoptions(precision=2)
 
@@ -128,13 +139,14 @@ np.set_printoptions(precision=2)
 plt.figure()
 plot_confusion_matrix(cnf_matrix,
                       classes=["True", "False"],
-                      title="Confusion matrix, without normalization",)
+                      title="Confusion matrix, hand-chosen features "
+                            "\n without normalization",)
 plt.show()
 
 # extracting true_positives, false_positives, true_negatives, false_negatives
 tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 print(
-    "\n hand-chosen features",
+    "\n Using hand-chosen features",
     "\n True Negatives: ", tn,
     "\n True Positives: ", tp,
     "\n False Positives: ", fp,
@@ -147,18 +159,23 @@ precision = tp / (tp + fp)
 recall    = tp / (tp + fn)
 f1_score  = (2 * precision * recall) / (precision + recall)
 
-print("\n Evaluation metrics [hand-chosen features]:",
+print("\n From confusion matrix [hand-chosen features]:",
       "\n Accuracy: ", round(accuracy,2)*100,
       "\n Precision: ", round(precision,2)*100,
       "\n Recall: ", round(recall,2)*100,
       "\n F1 Score: ", round(f1_score)*100)
 
 
+
 """****************************************************************
     Part L. Logistic regression with bad of words representations 
 *****************************************************************"""
 
-print("\n Using BOW as feature input")
+
+print("\n *********************************"
+      "\n    Using BOW as feature input"
+      "\n *********************************")
+
 #8. computing Bag of Words
 vectorizer = CountVectorizer()
 vectorizer.fit(data_train["text"])
@@ -166,26 +183,37 @@ x_train, x_test = vectorizer.transform(data_train["text"]), \
                   vectorizer.transform(data_test["text"])
 
 # 9. Fitting BOW into LR
-model = LogisticRegression(max_iter=1000).fit(x_train, y_train)
+model = LogisticRegression(max_iter=1000, C=50).fit(x_train, y_train)
 y_pred = model.predict(x_test)
 
-# 10. verify if model is overfitting.
+# 10a. verify if model is overfitting.
+print("\nmodel score with [BOW features]")
+print("training set score: ", model.score(x_train,y_train))
+print("testing set score:  ", model.score(x_test, y_test))
+
+# 10b. increase regularization to reduce overfitting
+model = LogisticRegression(max_iter=1000, C=0.01).fit(x_train, y_train)
+y_pred = model.predict(x_test)
+print("\nscore after adjusting regularization")
+print("training set score: ", model.score(x_train,y_train))
+print("testing set score: ", model.score(x_test, y_test))
 
 # 11. Evaluation Results || Compute confusion matrix
+print("\n\n")
 cnf_matrix = confusion_matrix(y_test, y_pred)
 np.set_printoptions(precision=2)
 
-# Plot non-normalized confusion matrix
+#Plot non-normalized confusion matrix
 plt.figure()
 plot_confusion_matrix(cnf_matrix,
                       classes=["True", "False"],
-                      title="Confusion matrix, without normalization",)
+                      title="Confusion matrix, BOW features \nwithout normalization",)
 plt.show()
 
 # extracting true_positives, false_positives, true_negatives, false_negatives
 tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 print(
-    "\n BOW as features",
+    "\n Using BOW as features",
     "\n True Negatives: ", tn,
     "\n True Positives: ", tp,
     "\n False Positives: ", fp,
@@ -198,7 +226,7 @@ precision = tp / (tp + fp)
 recall    = tp / (tp + fn)
 f1_score  = (2 * precision * recall) / (precision + recall)
 
-print("\n Evaluation metrics [BOW as features]:",
+print("\n From confusion matrix [BOW as features]:",
       "\n Accuracy: ", round(accuracy,2)*100,
       "\n Precision: ", round(precision,2)*100,
       "\n Recall: ", round(recall,2)*100,
