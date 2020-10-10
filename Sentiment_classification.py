@@ -2,16 +2,16 @@ import pandas as pd
 import numpy as np
 import nltk
 import matplotlib.pyplot as plt
-import statsmodels.api as sm
+import itertools
 
+from sklearn.metrics import confusion_matrix
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import plot_confusion_matrix
 from pdb import set_trace
 
 """Importing the dataset + target column boolean transformation """
-data = pd.read_csv("sentiment10.csv")
+data = pd.read_csv("sentiment.csv")
 data["sentiment"] = data["sentiment"] == "pos"
 data["sentiment"] = data["sentiment"].astype("bool") #assign boolean values to sentiment column
 
@@ -68,21 +68,99 @@ data_train, data_test = train_test_split(data, test_size=0.2)
 y_train, y_test = data_train["sentiment"], data_test["sentiment"]
 x_train, x_test= data_train[["n_characters","n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]],data_test[["n_characters","n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]]
 model = LogisticRegression(max_iter=1000).fit(x_train,y_train)
+y_pred = model.predict(x_test)
 
-print("\n logistic regression score (train):", model.score(x_train, y_train))
-print("\n logistic regression score (test) :", model.score(x_test, y_test))
+#Evaluation of Model - Confusion Matrix Plot based on: https://towardsdatascience.com/demystifying-confusion-matrix-confusion-9e82201592fd
+
+def plot_confusion_matrix(cm, classes,
+                          normalize=False,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    """
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    print(cm)
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.tight_layout()
+
+
+# Compute confusion matrix
+cnf_matrix = confusion_matrix(y_test, y_pred)
+np.set_printoptions(precision=2)
 
 # Plot non-normalized confusion matrix
-titles_options = [("Confusion matrix, without normalization", None),
-                  ("Normalized confusion matrix", 'true')]
-for title, normalize in titles_options:
-    disp = plot_confusion_matrix(model, x_test, y_test,
-                                 display_labels=["Positive","Negative"],
-                                 #cmap=plt.cm.Blues,
-                                 normalize=normalize)
-    disp.ax_.set_title(title)
+plt.figure()
+plot_confusion_matrix(cnf_matrix, classes=['Forged','Authorized'],
+                      title='Confusion matrix, without normalization')
 
-    print(title)
-    print(disp.confusion_matrix)
-#plt.show()
+plt.show()
 
+#extracting true_positives, false_positives, true_negatives, false_negatives
+tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+print("True Negatives: ",tn)
+print("False Positives: ",fp)
+print("False Negatives: ",fn)
+print("True Positives: ",tp)
+
+#Accuracy
+accuracy= (tn+tp)*100/(tp+tn+fp+fn)
+print("Accuracy:",accuracy)
+#Precision
+precision= (tp/(tp+fp))*100
+print("Precision:",precision)
+#Recall
+recall= (tp/(tp+fn))*100
+print("Recall: ",recall)
+#F1 Score
+print("F1 score",(2*precision*recall)/(precision + recall))
+
+"""Part L. Logistic regression with bad of words representations"""
+vectorizer = CountVectorizer()
+vectorizer.fit(data_train["text"])
+x_train, x_test = vectorizer.transform(data_train["text"]),vectorizer.transform(data_test["text"])
+
+model = LogisticRegression(max_iter=1000).fit(x_train,y_train)
+y_pred = model.predict(x_test)
+
+#extracting true_positives, false_positives, true_negatives, false_negatives
+print("\n Accuracy indicators when using BOW as features")
+tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+print("True Negatives: ",tn)
+print("False Positives: ",fp)
+print("False Negatives: ",fn)
+print("True Positives: ",tp)
+
+#Accuracy
+accuracy= (tn+tp)*100/(tp+tn+fp+fn)
+print("Accuracy:",accuracy)
+#Precision
+precision= (tp/(tp+fp))*100
+print("Precision:",precision)
+#Recall
+recall= (tp/(tp+fn))*100
+print("Recall: ",recall)
+#F1 Score
+print("F1 score",(2*precision*recall)/(precision + recall))
