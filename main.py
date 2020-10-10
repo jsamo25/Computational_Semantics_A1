@@ -56,9 +56,9 @@ print("\n Standard deviation Values\n",data[["rating", "sentiment", "n_character
 #22 Histogram of the rating column fo the DataFrame sentiment.
 #FIXME: commented lines to avoid the Histogram extra window
 print("Data Description\n",data[["rating", "sentiment", "n_characters", "n_tokens"]].describe())
-# plt.hist(data["rating"])
-# plt.grid(True)
-# plt.show()
+plt.hist(data["rating"])
+plt.grid(True)
+plt.show()
 
 """ PART C: Compute features for sentiment classification"""
 #25 The use of features may help to create functions, and later make predictions
