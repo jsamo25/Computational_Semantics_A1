@@ -33,11 +33,12 @@ negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "ch
 # positive_lexicons = pd.read_csv("positive-words.csv").transpose().values[0]
 # negative_lexicons = pd.read_csv("negative-words.csv").transpose().values[0]
 
+
 """*********************************************************
     PART J. Basic tasks and data exploration 
 *********************************************************"""
-# 2. #Initial text analysis and basic statistics of the dataset.
 
+# 2. #Initial text analysis and basic statistics of the dataset.
 data["sentences"] = data["text"].apply(nltk.tokenize.sent_tokenize)
 data["tokens"]    = data["text"].apply(nltk.tokenize.word_tokenize)
 data["n_characters"] = data["text"].apply(lambda x: len(x))
@@ -67,18 +68,20 @@ word_avg_per_sentiment = (data["n_tokens"].groupby(data["sentiment"])).mean()
 print("sentences average per sentiment\n", sent_avg_per_sentiment)
 print("word average per sentiment\n", word_avg_per_sentiment)
 
+
 """*********************************************************
     PART K. Logistic regression with hand-chosen features 
 *********************************************************"""
-#TODO: using [rating] felt a bit of cheating so I removed that from my list.
+
+# 5. TODO: using [rating] felt a bit of cheating so I removed that from my list.
 print("Selected features:"
                         "\n [n_characters]"
                         "\n [n_tokens]"
                         "\n [n_sentences]"
                         "\n [n_positive_lex]"
                         "\n [n_negative_lex]")
-# 6 Logistic regression
 
+# 6. Logistic regression
 data_train, data_test = train_test_split(data, test_size=0.2)
 y_train, y_test = data_train["sentiment"], data_test["sentiment"]
 x_train, x_test = (
@@ -88,7 +91,8 @@ x_train, x_test = (
 model = LogisticRegression(max_iter=1000).fit(x_train, y_train)
 y_pred = model.predict(x_test)
 
-#7 Evaluation of Model - based on: https://towardsdatascience.com/demystifying-confusion-matrix-confusion-9e82201592fd
+# 7. Evaluation Results || Compute confusion matrix
+# based on: https://towardsdatascience.com/demystifying-confusion-matrix-confusion-9e82201592fd
 def plot_confusion_matrix(cm, classes,normalize=False,title="Confusion matrix",cmap=plt.cm.Blues):
     if normalize:
         cm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
@@ -130,40 +134,44 @@ plt.show()
 # extracting true_positives, false_positives, true_negatives, false_negatives
 tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 print(
+    "\n hand-chosen features",
     "\n True Negatives: ", tn,
     "\n True Positives: ", tp,
     "\n False Positives: ", fp,
     "\n False Negatives: ", fn
 )
 
-# Performance metrics when manual features are used
-accuracy  = (tn + tp) * 100 / (tp + tn + fp + fn)
-precision = tp * 100 / (tp + fp)
-recall    = tp * 100 / (tp + fn)
+# Performance metrics when BOW feature is used
+accuracy  = (tn + tp) / (tp + tn + fp + fn)
+precision = tp / (tp + fp)
+recall    = tp / (tp + fn)
 f1_score  = (2 * precision * recall) / (precision + recall)
 
-print("\n Evaluation metrics:",
-      "\n Accuracy: ", accuracy, "%",
-      "\n Precision: ", precision, "%",
-      "\n Recall: ", recall, "%",
-      "\n F1 Score: ", f1_score, "%",
-)
+print("\n Evaluation metrics [hand-chosen features]:",
+      "\n Accuracy: ", round(accuracy,2)*100,
+      "\n Precision: ", round(precision,2)*100,
+      "\n Recall: ", round(recall,2)*100,
+      "\n F1 Score: ", round(f1_score)*100)
+
 
 """****************************************************************
     Part L. Logistic regression with bad of words representations 
 *****************************************************************"""
 
+print("\n Using BOW as feature input")
+#8. computing Bag of Words
 vectorizer = CountVectorizer()
 vectorizer.fit(data_train["text"])
 x_train, x_test = vectorizer.transform(data_train["text"]), \
                   vectorizer.transform(data_test["text"])
 
+# 9. Fitting BOW into LR
 model = LogisticRegression(max_iter=1000).fit(x_train, y_train)
 y_pred = model.predict(x_test)
 
-# extracting true_positives, false_positives, true_negatives, false_negatives
-print("\n Using BOW as feature input")
-# Compute confusion matrix
+# 10. verify if model is overfitting.
+
+# 11. Evaluation Results || Compute confusion matrix
 cnf_matrix = confusion_matrix(y_test, y_pred)
 np.set_printoptions(precision=2)
 
@@ -177,6 +185,7 @@ plt.show()
 # extracting true_positives, false_positives, true_negatives, false_negatives
 tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 print(
+    "\n BOW as features",
     "\n True Negatives: ", tn,
     "\n True Positives: ", tp,
     "\n False Positives: ", fp,
@@ -184,14 +193,13 @@ print(
 )
 
 # Performance metrics when BOW feature is used
-accuracy  = (tn + tp) * 100 / (tp + tn + fp + fn)
-precision = tp * 100 / (tp + fp)
-recall    = tp * 100 / (tp + fn)
+accuracy  = (tn + tp) / (tp + tn + fp + fn)
+precision = tp / (tp + fp)
+recall    = tp / (tp + fn)
 f1_score  = (2 * precision * recall) / (precision + recall)
 
-print("\n Evaluation metrics:",
-      "\n Accuracy: ", accuracy, "%",
-      "\n Precision: ", precision, "%",
-      "\n Recall: ", recall, "%",
-      "\n F1 Score: ", f1_score, "%",
-)
+print("\n Evaluation metrics [BOW as features]:",
+      "\n Accuracy: ", round(accuracy,2)*100,
+      "\n Precision: ", round(precision,2)*100,
+      "\n Recall: ", round(recall,2)*100,
+      "\n F1 Score: ", round(f1_score)*100)
