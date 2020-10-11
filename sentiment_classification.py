@@ -104,11 +104,8 @@ def plot_confusion_matrix(cm, classes,
                           normalize=False,
                           title="Confusion matrix",
                           cmap=plt.cm.Blues):
-    if normalize:
-        cm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
-        print("Normalized confusion matrix")
-    else:
-        print("Confusion matrix, without normalization")
+
+    print("Confusion matrix", "\nnormalization=",normalize )
     print(cm)
 
     plt.imshow(cm, interpolation="nearest", cmap=cmap)
@@ -139,8 +136,7 @@ np.set_printoptions(precision=2)
 plt.figure()
 plot_confusion_matrix(cnf_matrix,
                       classes=["True", "False"],
-                      title="Confusion matrix, hand-chosen features "
-                            "\n without normalization",)
+                      title="Confusion matrix, hand-chosen features")
 plt.show()
 
 # extracting true_positives, false_positives, true_negatives, false_negatives
@@ -207,7 +203,7 @@ np.set_printoptions(precision=2)
 plt.figure()
 plot_confusion_matrix(cnf_matrix,
                       classes=["True", "False"],
-                      title="Confusion matrix, BOW features \nwithout normalization",)
+                      title="Confusion matrix, BOW features")
 plt.show()
 
 # extracting true_positives, false_positives, true_negatives, false_negatives
