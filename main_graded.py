@@ -31,8 +31,11 @@ negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "ch
                      "hate", "idiot", "inflict", "lazy", "miserable", "mourn", "nervous", "objection", "pest", "plot",
                      "reject", "scream", "silly", "terrible", "unfriendly","vile", "wicked"]
 
-# A bigger list is provided from https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html
+"""
+# A bigger list of lexicons is provided from https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html
 # aprox. 5% in accuracy is gained, however the processing time increases significantly
+# uncomment the following lines to use the full DB of Lexicons.
+"""
 # positive_lexicons = pd.read_csv("positive-words.csv").transpose().values[0]
 # negative_lexicons = pd.read_csv("negative-words.csv").transpose().values[0]
 
@@ -59,19 +62,19 @@ data["n_negative_lex"] = data["tokens"].apply(count_negative_lexicons)
 
 print("\n Basic data statistics \n", data.describe())
 
-# 3. Histogram of the rating column
+# 3. Rating column analysis
 plt.hist(data["rating"])
 plt.title("Rating Histogram")
 plt.grid(True)
 plt.show()
 
-# 4. av. words/sentences for pos/neg reviews
+# 4. Average of words words/sentences sorted by pos/neg reviews
 sent_avg_per_sentiment = (data["n_sentences"].groupby(data["sentiment"])).mean()
 word_avg_per_sentiment = (data["n_tokens"].groupby(data["sentiment"])).mean()
 
 print("\nSentences average", sent_avg_per_sentiment)
 print("\nWords average", word_avg_per_sentiment)
-#TODO: replace False --> Negative, True --> Positive
+
 
 """*********************************************************
     PART K. Logistic regression with hand-chosen features 
@@ -82,7 +85,7 @@ print(
     "\n ***************************************"
 )
 
-# 5. using [rating] felt a bit of cheating so I removed that from my list.
+# 5. Focused on ["text"] derived features, and decided to ignored others like ["rating"]
 print(
     "Selected features:"
     "\n [n_characters]"
@@ -92,7 +95,7 @@ print(
     "\n [n_negative_lex]"
 )
 
-# 6. Logistic regression
+# 6. Data split, training/test and evaluation function.
 data_train, data_test = train_test_split(data, test_size=0.3)
 y_train, y_test = data_train["sentiment"], data_test["sentiment"]
 x_train, x_test = (
@@ -100,18 +103,18 @@ x_train, x_test = (
      data_test[["n_characters", "n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]]
 )
 
-model = LogisticRegression(max_iter=1000).fit(x_train, y_train)
-
 def accuracy(model,x_train,y_train,x_test,y_test):
     print("training set:", model.score(x_train,y_train))
     print("testing set:",model.score(x_test,y_test))
+
+
+model = LogisticRegression(max_iter=1000).fit(x_train, y_train)
 
 print("\nInitial model score")
 accuracy(model, x_train,y_train,x_test,y_test)
 
 # 13 Changing model to use CrossValidation...
 model = LogisticRegressionCV(cv=10, random_state=0, max_iter=1000).fit(x_train,y_train)
-y_pred = model.predict(x_test)
 
 print("\nFinal model score [hand-chosen features] and [CV]")
 accuracy(model, x_train,y_train,x_test,y_test)
@@ -119,6 +122,7 @@ accuracy(model, x_train,y_train,x_test,y_test)
 
 # 7. Evaluation & Confusion matrix
 # based on: https://towardsdatascience.com/demystifying-confusion-matrix-confusion-9e82201592fd
+
 def plot_confusion_matrix(cm, classes, normalize=False, title="Confusion matrix", cmap=plt.cm.Blues):
 
     print("Confusion matrix", "\nnormalization=", normalize)
@@ -142,14 +146,6 @@ def plot_confusion_matrix(cm, classes, normalize=False, title="Confusion matrix"
     plt.ylabel("Golden label")
     plt.xlabel("Predicted label")
     plt.tight_layout()
-
-# Compute confusion matrix
-cnf_matrix = confusion_matrix(y_test, y_pred)
-
-# Plot non-normalized confusion matrix
-plt.figure()
-plot_confusion_matrix(cnf_matrix,classes=["True", "False"],title="Confusion matrix")
-plt.show()
 
 def print_evaluation (y_test, y_pred, feature_type):
 
@@ -175,6 +171,16 @@ def print_evaluation (y_test, y_pred, feature_type):
         "\n F1 Score: ",round(f1_score, 2) * 100,
     )
 
+
+# Predictions on test data, and confusion matrix computation
+y_pred = model.predict(x_test)
+cnf_matrix = confusion_matrix(y_test, y_pred)
+
+# Plot non-normalized confusion matrix
+plt.figure()
+plot_confusion_matrix(cnf_matrix,classes=["True", "False"],title="Confusion matrix")
+plt.show()
+
 #evaluation metrics
 print_evaluation(y_test, y_pred,"hand-chosen features")
 
@@ -192,9 +198,7 @@ print(
 # 8. computing Bag of Words
 vectorizer = CountVectorizer()
 vectorizer.fit(data_train["text"])
-x_train, x_test = vectorizer.transform(data_train["text"]), vectorizer.transform(
-    data_test["text"]
-)
+x_train, x_test = vectorizer.transform(data_train["text"]), vectorizer.transform(data_test["text"])
 
 # 9. Fitting BOW into LR
 model = LogisticRegression(max_iter=1000, C=10).fit(x_train, y_train)
@@ -215,13 +219,13 @@ accuracy(model, x_train,y_train,x_test,y_test)
 # 13.Using LogisticRegressionCV and stronger regularization
 print("\nChanging LR model to use CrossValidation [BOW features]")
 model = LogisticRegressionCV(cv=5, random_state=0, max_iter=1000).fit(x_train,y_train)
-y_pred = model.predict(x_test)
 
 print("\nFinal model score [BOW features] and [CV]")
 accuracy(model, x_train,y_train,x_test,y_test)
 
 
-# 11. Evaluation Results || Compute confusion matrix
+# 11.  Predictions on test data, and confusion matrix computation
+y_pred = model.predict(x_test)
 cnf_matrix = confusion_matrix(y_test, y_pred)
 
 # Plot non-normalized confusion matrix
