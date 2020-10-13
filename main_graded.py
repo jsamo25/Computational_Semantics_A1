@@ -49,16 +49,13 @@ data["n_characters"] = data["text"].apply(lambda x: len(x))
 data["n_tokens"] = data["tokens"].apply(lambda x: len(x))
 data["n_sentences"] = data["sentences"].apply(lambda x: len(x))
 
-
 def count_positive_lexicons(tokens):
     return sum(lexicon in positive_lexicons for lexicon in tokens)
 data["n_positive_lex"] = data["tokens"].apply(count_positive_lexicons)
 
-
 def count_negative_lexicons(tokens):
     return sum(lexicon in negative_lexicons for lexicon in tokens)
 data["n_negative_lex"] = data["tokens"].apply(count_negative_lexicons)
-
 
 print("\n Basic data statistics \n", data.describe())
 
@@ -72,8 +69,8 @@ plt.show()
 sent_avg_per_sentiment = (data["n_sentences"].groupby(data["sentiment"])).mean()
 word_avg_per_sentiment = (data["n_tokens"].groupby(data["sentiment"])).mean()
 
-print("sentences average per sentiment\n", sent_avg_per_sentiment)
-print("word average per sentiment\n", word_avg_per_sentiment)
+print("\nSentences average", sent_avg_per_sentiment)
+print("\nWords average", word_avg_per_sentiment)
 #TODO: replace False --> Negative, True --> Positive
 
 """*********************************************************
@@ -132,15 +129,12 @@ def plot_confusion_matrix(cm, classes, normalize=False, title="Confusion matrix"
     plt.colorbar()
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+    plt.yticks(tick_marks, classes, rotation=45)
 
     fmt = ".2f" if normalize else "d"
     thresh = cm.max() / 2.0
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(
-            j,
-            i,
-            format(cm[i, j], fmt),
+        plt.text(j, i, format(cm[i, j], fmt),
             horizontalalignment="center",
             color="white" if cm[i, j] > thresh else "black",
         )
@@ -172,13 +166,13 @@ def print_evaluation (y_test, y_pred, feature_type):
     accuracy = (tn + tp) / (tp + tn + fp + fn)
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
-    f1_score = (2 * precision * recall) / (precision + recall)
+    f1_score = ((2 * precision * recall) / (precision + recall))
 
     print(
         "\n Accuracy: ", round(accuracy, 2) * 100,
         "\n Precision: ",round(precision, 2) * 100,
         "\n Recall: ", round(recall, 2) * 100,
-        "\n F1 Score: ",round(f1_score) * 100,
+        "\n F1 Score: ",round(f1_score, 2) * 100,
     )
 
 #evaluation metrics
@@ -203,10 +197,10 @@ x_train, x_test = vectorizer.transform(data_train["text"]), vectorizer.transform
 )
 
 # 9. Fitting BOW into LR
-model = LogisticRegression(max_iter=1000, C=1).fit(x_train, y_train)
+model = LogisticRegression(max_iter=1000, C=10).fit(x_train, y_train)
 
 # 10a. verify if model is overfitting.
-print("\n Initial model score, using a weak regularization, C=1")
+print("\n Initial model score, using a weak regularization, C=10")
 accuracy(model, x_train,y_train,x_test,y_test)
 
 
@@ -242,7 +236,7 @@ print_evaluation(y_test, y_pred,"BOW features")
     Part M. Format review & LR extra features. 
 *****************************************************************"""
 
-# 12. PEP 8 was automatically implemented after executing on terminal: $ black sentiment_classification.py
+# 12. PEP 8 was automatically implemented after executing on terminal: $ black main_graded.py
 #some recommendations were not really helping so where ignored.
 
 # 13. LogisticRegression with CV implemented.
