@@ -47,9 +47,6 @@ data["n_negative_lex"] = data["tokens"].apply(count_negative_lexicons)
                     Train/Test split
 *********************************************************"""
 
-data_train, data_test = train_test_split(data, test_size=0.3)
-y_train, y_test = data_train["sentiment"], data_test["sentiment"]
-
 # 6. Data split, training/test and evaluation function.
 data_train, data_test = train_test_split(data, test_size=0.3)
 y_train, y_test = data_train["sentiment"], data_test["sentiment"]
@@ -57,6 +54,13 @@ x_train, x_test = (
     data_train[["n_characters", "n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]],
      data_test[["n_characters", "n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]]
 )
+
+
+vectorizer = CountVectorizer()
+vectorizer.fit(data_train["text"])
+x_train= vectorizer.transform(data_train["text"])
+x_test = vectorizer.transform(data_test["text"])
+
 
 """*********************************************************
                     Gaussian Naive Bayes

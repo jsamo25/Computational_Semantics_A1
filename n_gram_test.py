@@ -63,8 +63,8 @@ from:  https://stackoverflow.com/questions/51621307/bag-of-words-bow-vs-n-gram-s
 The main advantages of ngrams over BOW i to take into account the sequence of words. 
 For instance, in the sentences:
 
-"I love vanilla but I hate chocolate"
-"I love chocolate but I hate vanilla"
+"I love apples but I hate grapes"
+"I love grapes but I hate apples"
 
 same bow, but different n-gram seq for n=2
 """

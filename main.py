@@ -10,7 +10,9 @@ from sklearn.linear_model import LogisticRegression
 from pdb import set_trace
 pd.set_option("display.max_columns", 10)
 
-""" PART A: Getting started """
+""" 
+    PART A: Getting started 
+"""
 #FIXME: hardcoded "data" to work with full data set to avoid the input step. (remove commented line)
 #TODO: also, not sure if i took the right approach, since not using a Boolean condition, but an if-rule instead.
 def TRIAL(value):
@@ -26,7 +28,9 @@ value = 1#input("input 1 to select the full data set, press anykey to select the
 data = TRIAL(int(value))
 
 
-""" PART B: Loading and inspecting the data"""
+""" 
+    PART B: Loading and inspecting the data
+"""
 #FIXME: remove commented lines
 #10, 11, 12, 13
 print(data.shape)
@@ -60,7 +64,9 @@ plt.hist(data["rating"])
 plt.grid(True)
 plt.show()
 
-""" PART C: Compute features for sentiment classification"""
+""" 
+    PART C: Compute features for sentiment classification
+"""
 #25 The use of features may help to create functions, and later make predictions
 #26 Times that appear the word bad, Times that appear the word good, capitalized words?, exclamation marks?
 #27 selected feature: Times that appear the word "good"
@@ -91,10 +97,14 @@ def negative_lex_n(tokens):
 data['negative_lex_n'] = data['tokens'].apply(negative_lex_n)
 print(data["negative_lex_n"])
 
-""" PART D: Code Cleaning """
+"""     
+    PART D: Code Cleaning 
+"""
 #TODO: find a better format
 
-""" PART E: Generate predictions based on the features """
+""" 
+    PART E: Generate predictions based on the features 
+"""
 #35, 36
 def rule_1(feature):
     if feature > 2:
@@ -142,7 +152,9 @@ def always_random(arg):
 data["baseline_ran"] = data["text"].apply(always_random)
 print(data["baseline_ran"])
 
-""" PART F: Evaluating the predictions, tweaking the rules """
+""" 
+    PART F: Evaluating the predictions, tweaking the rules 
+"""
 #TODO: shoould one present the accuracy as its decimal form or % ?
 #41 accuracy for rules 1, 2, 3  + baselines (using sklearn)
 print("accuracy value for rule 1 [based on # positive lexicons [threshold pos>2, def. neg.]]\n:", accuracy_score(data["sentiment"],data["predicted_by_rule_1"]))
@@ -164,7 +176,9 @@ print("accuracy random baseline", accuracy(data["sentiment"],data["baseline_ran"
 #45
 #46 Overfitting
 
-""" PART G: Logistic regression """
+""" 
+    PART G: Logistic regression 
+"""
 #48
 X = data[["positive_lex_n","negative_lex_n", "n_tokens", "n_characters"]]
 Y = data["sentiment"]
@@ -174,12 +188,15 @@ model = LogisticRegression().fit(X,Y)
 #50 pedictions
 data["log_reg_prediction"] = model.predict(X)
 
-""" PART H: More evaluation: confusion matrix; different evaluation metrics """
+""" 
+    PART H: More evaluation: confusion matrix; different evaluation metrics 
+"""
 #52 using accuracy function defined in #1; also using model.score()
 print("\n Accuracy value of the log_reg model",accuracy(data["sentiment"], data["log_reg_prediction"]))
 print("\n logistic regression score:", model.score(X,Y))
 
 #53 Using statsmodels library, to get coefficients and their associated probabilities // following https://stackoverflow.com/questions/57924484/finding-coefficients-for-logistic-regression-in-python
 print(sm.Logit(Y,X).fit().summary())
+print(model.coef_)
 
 #55 using crosstab()
