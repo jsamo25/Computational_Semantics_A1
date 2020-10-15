@@ -6,6 +6,12 @@ from textblob import TextBlob
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+
+
+"""*********************************************************
+                    Loading Data
+*********************************************************"""
+
 data = pd.read_csv("sentiment10.csv")
 
 def preprocess(text):
@@ -20,6 +26,10 @@ def preprocess(text):
 
 data["text"] = preprocess(data["text"])
 
+
+"""*********************************************************
+                         WordCloud
+*********************************************************"""
 wordcloud = WordCloud(
     width = 1500,
     height = 1000,
@@ -34,8 +44,10 @@ plt.axis('off')
 plt.tight_layout(pad=0)
 plt.show()
 
-#TODO: use textblob and include polarity & subjectivity as features for ML alg
 
+"""*********************************************************
+        Polarity & Subjectivity Tests
+*********************************************************"""
 def textblob(text):
     polarity, subjectivity = 0,0
     for text in text:
@@ -57,6 +69,10 @@ x_train, x_test = (
      data_test[["polarity", "subjectivity"]]
 )
 
+
+"""*********************************************************
+                    LR & Evaluation
+*********************************************************"""
 model = LogisticRegression(max_iter=1000, C=0.001).fit(x_train, y_train)
 y_pred = model.predict(x_test)
 
