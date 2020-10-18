@@ -61,6 +61,8 @@ def count_negative_lexicons(tokens):
 data["n_negative_lex"] = data["tokens"].apply(count_negative_lexicons)
 
 print("\n Basic data statistics \n", data.describe())
+print("\n Average number of words", data["n_tokens"].mean())
+print("\n Average number of sentences", data["n_sentences"].mean())
 
 # 3. Rating column analysis
 plt.hist(data["rating"])
@@ -72,8 +74,8 @@ plt.show()
 sent_avg_per_sentiment = (data["n_sentences"].groupby(data["sentiment"])).mean()
 word_avg_per_sentiment = (data["n_tokens"].groupby(data["sentiment"])).mean()
 
-print("\nSentences average", sent_avg_per_sentiment)
-print("\nWords average", word_avg_per_sentiment)
+print("\nSentences average", "\n",sent_avg_per_sentiment)
+print("\nWords average", "\n",word_avg_per_sentiment)
 
 
 """*********************************************************
@@ -110,14 +112,17 @@ def accuracy(model,x_train,y_train,x_test,y_test):
 
 model = LogisticRegression(max_iter=1000).fit(x_train, y_train)
 
-print("\nInitial model score")
+print("\n Initial model score")
 accuracy(model, x_train,y_train,x_test,y_test)
+
+print("\n Initial model Coefficients", model.coef_.squeeze())
 
 # 13 Changing model to use CrossValidation...
 model = LogisticRegressionCV(cv=10, random_state=0, max_iter=1000).fit(x_train,y_train)
 
-print("\nFinal model score [hand-chosen features] and [CV]")
+print("\nFinal model score [hand-chosen features] and [CrossValidation]")
 accuracy(model, x_train,y_train,x_test,y_test)
+print("\nFinal model Coefficients",model.coef_.squeeze())
 
 
 # 7. Evaluation & Confusion matrix
@@ -220,7 +225,7 @@ accuracy(model, x_train,y_train,x_test,y_test)
 print("\nChanging LR model to use CrossValidation [BOW features]")
 model = LogisticRegressionCV(cv=5, random_state=0, max_iter=1000).fit(x_train,y_train)
 
-print("\nFinal model score [BOW features] and [CV]")
+print("\nFinal model score [BOW features] and [CrossValidation]")
 accuracy(model, x_train,y_train,x_test,y_test)
 
 
