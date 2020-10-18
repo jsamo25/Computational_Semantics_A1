@@ -36,8 +36,8 @@ negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "ch
 # aprox. 5% in accuracy is gained, however the processing time increases significantly
 # uncomment the following lines to use the full DB of Lexicons.
 """
-# positive_lexicons = pd.read_csv("positive-words.csv").transpose().values[0]
-# negative_lexicons = pd.read_csv("negative-words.csv").transpose().values[0]
+# positive_lexicons = pd.read_csv("positive-words.csv").transpose().values.squeeze()
+# negative_lexicons = pd.read_csv("negative-words.csv").transpose().values.squeeze()
 
 
 """*********************************************************
@@ -52,9 +52,11 @@ data["n_characters"] = data["text"].apply(lambda x: len(x))
 data["n_tokens"] = data["tokens"].apply(lambda x: len(x))
 data["n_sentences"] = data["sentences"].apply(lambda x: len(x))
 
+
 def count_positive_lexicons(tokens):
     return sum(lexicon in positive_lexicons for lexicon in tokens)
 data["n_positive_lex"] = data["tokens"].apply(count_positive_lexicons)
+
 
 def count_negative_lexicons(tokens):
     return sum(lexicon in negative_lexicons for lexicon in tokens)
@@ -87,7 +89,7 @@ print(
     "\n ***************************************"
 )
 
-# 5. Focused on ["text"] derived features, and decided to ignored others like ["rating"]
+# 5. Focused on ["text"] derived features.
 print(
     "Selected features:"
     "\n [n_characters]"
@@ -104,33 +106,46 @@ x_train, x_test = (
     data_train[["n_characters", "n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]],
      data_test[["n_characters", "n_tokens", "n_sentences", "n_positive_lex", "n_negative_lex"]]
 )
-
+#defining test functions
 def accuracy(model,x_train,y_train,x_test,y_test):
     print("training set:", model.score(x_train,y_train))
     print("testing set:",model.score(x_test,y_test))
 
 
-model = LogisticRegression(max_iter=1000).fit(x_train, y_train)
+def compare (target, prediction):
+    correct = target == prediction
+    return correct.mean()
 
+#Adding baselines for later comparison
+p = data["sentiment"].mean()
+data["baseline_ran"] = np.random.choice([True, False], size=len(data),p=[p, 1-p])
+data["baseline_pos"] = True
+data["baseline_neg"] = False
+
+#Logistic regression basic.
 print("\n Initial model score")
+model = LogisticRegression(max_iter=1000).fit(x_train, y_train)
 accuracy(model, x_train,y_train,x_test,y_test)
-
 print("\n Initial model Coefficients", model.coef_.squeeze())
 
 # 13 Changing model to use CrossValidation...
+print("\nFinal model score [hand-chosen features] and 10-f [CrossValidation]")
 model = LogisticRegressionCV(cv=10, random_state=0, max_iter=1000).fit(x_train,y_train)
-
-print("\nFinal model score [hand-chosen features] and [CrossValidation]")
 accuracy(model, x_train,y_train,x_test,y_test)
 print("\nFinal model Coefficients",model.coef_.squeeze())
 
+print("\n Compare to baselines:")
+print("accuracy of all-positive baseline", compare(data["sentiment"],data["baseline_pos"]))
+print("accuracy of all-negative baseline", compare(data["sentiment"],data["baseline_neg"]))
+print("accuracy of all-random baseline", compare(data["sentiment"],data["baseline_ran"]))
 
 # 7. Evaluation & Confusion matrix
 # based on: https://towardsdatascience.com/demystifying-confusion-matrix-confusion-9e82201592fd
 
+
 def plot_confusion_matrix(cm, classes, normalize=False, title="Confusion matrix", cmap=plt.cm.Blues):
 
-    print("Confusion matrix", "\nnormalization=", normalize)
+    print("\nConfusion matrix", "\nnormalization=", normalize)
     print(cm)
 
     plt.imshow(cm, interpolation="nearest", cmap=cmap)
@@ -151,6 +166,7 @@ def plot_confusion_matrix(cm, classes, normalize=False, title="Confusion matrix"
     plt.ylabel("Golden label")
     plt.xlabel("Predicted label")
     plt.tight_layout()
+
 
 def print_evaluation (y_test, y_pred, feature_type):
 
@@ -248,8 +264,8 @@ print_evaluation(y_test, y_pred,"BOW features")
 # 12. PEP 8 was automatically implemented after executing on terminal: $ black main_graded.py
 #some recommendations were not really helping so where ignored.
 
-# 13. LogisticRegression with CV implemented.
+# 13. LogisticRegression with CV: implemented.
 
-# 14. bi-gram tested on separate file
+# 14. bi-gram tested on separate file (n_gram_test.py)
 
-# 15 word_cloud computed on separate file
+# 15 word_cloud computed on separate file (word_cloud.py)
