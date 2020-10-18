@@ -43,5 +43,6 @@ model = LogisticRegression(max_iter=1000).fit(x_train,y_train)
 print("\n logistic regression score (train):", model.score(x_train, y_train))
 print("\n logistic regression score (test) :", model.score(x_test, y_test))
 
-#53 Using statsmodels library, to get coefficients and their associated probabilities // following https://stackoverflow.com/questions/57924484/finding-coefficients-for-logistic-regression-in-python
+#53 Using statsmodels library, to get coefficients and their associated probabilities
+#following https://stackoverflow.com/questions/57924484/finding-coefficients-for-logistic-regression-in-python
 #print(sm.Logit(y_test, x_test).fit().summary())

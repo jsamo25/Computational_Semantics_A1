@@ -198,5 +198,3 @@ print("\n logistic regression score:", model.score(X,Y))
 #53 Using statsmodels library, to get coefficients and their associated probabilities // following https://stackoverflow.com/questions/57924484/finding-coefficients-for-logistic-regression-in-python
 print(sm.Logit(Y,X).fit().summary())
 print(model.coef_)
-
-#55 using crosstab()
