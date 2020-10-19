@@ -1,4 +1,127 @@
-#with external lexicon files
+#using 10fold CV for Bow
+ Basic data statistics
+              rating  n_characters      n_tokens   n_sentences  n_positive_lex  \
+count  20000.000000  20000.000000  20000.000000  20000.000000    20000.000000
+mean       5.477750   1325.268450    282.753200     10.840100        1.420000
+std        3.466498   1008.338121    211.909904      8.302673        1.681054
+min        1.000000     52.000000     11.000000      1.000000        0.000000
+25%        2.000000    701.000000    151.000000      6.000000        0.000000
+50%        5.500000    978.000000    210.000000      9.000000        1.000000
+75%        9.000000   1609.000000    343.250000     13.000000        2.000000
+max       10.000000  13704.000000   2818.000000    282.000000       30.000000
+
+       n_negative_lex
+count    20000.000000
+mean         0.864300
+std          1.282446
+min          0.000000
+25%          0.000000
+50%          0.000000
+75%          1.000000
+max         25.000000
+
+ Average number of words 282.7532
+
+ Average number of sentences 10.8401
+
+Sentences average
+ sentiment
+False    11.1112
+True     10.5690
+Name: n_sentences, dtype: float64
+
+Words average
+ sentiment
+False    280.8858
+True     284.6206
+Name: n_tokens, dtype: float64
+
+ ***************************************
+    Using hand-chosen features as input
+ ***************************************
+Selected features:
+ [n_characters]
+ [n_tokens]
+ [n_sentences]
+ [n_positive_lex]
+ [n_negative_lex]
+
+ Initial model score
+training set: 0.6633571428571429
+testing set: 0.6736666666666666
+
+ Initial model Coefficients [ 0.   -0.01 -0.02  0.4  -0.63]
+
+Final model score [hand-chosen features] and 10-f [CrossValidation]
+training set: 0.6643571428571429
+testing set: 0.6753333333333333
+
+Final model Coefficients [ 0.   -0.01 -0.02  0.39 -0.61]
+
+ Compare to baselines:
+accuracy of all-positive baseline 0.5
+accuracy of all-negative baseline 0.5
+accuracy of all-random baseline 0.4972
+
+Confusion matrix
+normalization= False
+[[1906 1090]
+ [ 858 2146]]
+
+ Printing evaluation metrics for hand-chosen features
+
+ True Negatives:  1906
+ True Positives:  2146
+ False Positives:  1090
+ False Negatives:  858
+
+ Accuracy:  68.0
+ Precision:  66.0
+ Recall:  71.0
+ F1 Score:  69.0
+
+ *********************************
+    Using BOW as feature input
+ *********************************
+
+ Initial model score, using a weak regularization, C=10
+training set: 1.0
+testing set: 0.8746666666666667
+
+adjusting regularization...
+
+Score with stronger regularization, C=0.01
+training set: 0.9217857142857143
+testing set: 0.8773333333333333
+
+Changing LR model to use CrossValidation [BOW features]
+
+Final model score [BOW features] and [CrossValidation]
+training set: 0.9637857142857142
+testing set: 0.8865
+
+Confusion matrix
+normalization= False
+[[2620  376]
+ [ 305 2699]]
+
+ Printing evaluation metrics for BOW features
+
+ True Negatives:  2620
+ True Positives:  2699
+ False Positives:  376
+ False Negatives:  305
+
+ Accuracy:  89.0
+ Precision:  88.0
+ Recall:  90.0
+ F1 Score:  89.0
+
+Process finished with exit code 0
+
+
+
+#with external lexicon files , 5f in bow
 "C:\Python Projects\Computational_Semantics_A1\venv\Scripts\python.exe" "C:/Python Projects/Computational_Semantics_A1/main_graded.py"
 
  Basic data statistics

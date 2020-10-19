@@ -315,6 +315,7 @@ def preprocess(text):
     text = text.str.replace("(&lt)", "")
     text = text.str.replace("(\xa0)", " ")
     text = text.str.replace("([^0-9A-Za-z \t])|(\w+:\/\/\S+)", "")
+    text = text.str.replace("br","")
     return text
 
 
