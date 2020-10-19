@@ -3,7 +3,7 @@
 
 The libraries used in this project are included in `requirements.txt`
 
-The non-graded part of the assignment is included in the following files:
+The non-graded part of the assignment is solved in the following files:
 
 1. `main.py`
 2. `bow.py`
@@ -15,7 +15,7 @@ The extra CSV files which include the movie reviews, and an external list of sen
 * `negative-words.csv`
 * `positive-words.csv`
 
-The graded part of the assignment is included in the following files:
+The graded part of the assignment is solved in the following files:
 
 1. `main_graded.py`
 2. `n_gram_test.py`
