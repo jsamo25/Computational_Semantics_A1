@@ -121,7 +121,7 @@ Process finished with exit code 0
 
 
 
-#with external lexicon files , 5f in bow
+#with external lexicon files , 5fold CrossValidation in bow
 "C:\Python Projects\Computational_Semantics_A1\venv\Scripts\python.exe" "C:/Python Projects/Computational_Semantics_A1/main_graded.py"
 
  Basic data statistics
