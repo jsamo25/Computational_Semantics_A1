@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 
 from sklearn.linear_model import LogisticRegressionCV
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
-from textblob import TextBlob
 
 
 """*********************************************************
@@ -22,38 +22,55 @@ data_train, data_test = train_test_split(data, test_size=0.3)
 y_train, y_test = data_train["sentiment"], data_test["sentiment"]
 
 """*********************************************************
-                    BOW as input
+                    BOW as input (Unigrams)
 *********************************************************"""
 # computing Bag of Words
 vectorizer = CountVectorizer()
 vectorizer.fit(data_train["text"])
-x_train, x_test = vectorizer.transform(data_train["text"]), \
-                  vectorizer.transform(data_test["text"])
+x_train = vectorizer.transform(data_train["text"])
+x_test = vectorizer.transform(data_test["text"])
 
-# 9. Fitting BOW into LR with CV
-print("\n LogisticRegressionCV [BOW features]")
-model = LogisticRegressionCV(cv=5, random_state=0, max_iter=1000).fit(x_train,y_train)
+# 9. Fitting BOW into LR with strong regularization
+print("\n LogisticRegression [BOW features], reg[C=0.01]")
+model = LogisticRegression(C=0.01, random_state=0, max_iter=1000).fit(x_train, y_train)
 
-print("\nModel score [BOW features] and [CV]")
+print("\nModel score [BOW features]")
 print("training set score: ", model.score(x_train, y_train))
 print("testing set score:  ", model.score(x_test, y_test))
 
 
 """*********************************************************
-                    BOW n-grams
+                    BOW n-grams n = 1, 2
 *********************************************************"""
 
 
-vectorizer = CountVectorizer(ngram_range=(1,2))
+vectorizer = CountVectorizer(ngram_range=(1, 2))
 vectorizer.fit(data_train["text"])
-x_train, x_test = vectorizer.transform(data_train["text"]), \
-                  vectorizer.transform(data_test["text"])
+x_train = vectorizer.transform(data_train["text"])
+x_test = vectorizer.transform(data_test["text"])
 
-# 9. Fitting BOW into LR
-print("\n LogisticRegressionCV [BOW n-gram; n=2]")
-model = LogisticRegressionCV(cv=5, random_state=0, max_iter=1000).fit(x_train,y_train)
+# 9. Fitting BOW into Logistic regression
+print("\n LogisticRegression [BOW n-gram; n <=2], reg[C=0.01]")
+model = LogisticRegression(C=0.01, random_state=0, max_iter=1000).fit(x_train, y_train)
 
-print("\nModel score [BOW n-gram; n=2] and [CV]")
+print("\n Model score [BOW n-gram; n <= 2]")
+print("training set score: ", model.score(x_train, y_train))
+print("testing set score:  ", model.score(x_test, y_test))
+
+"""*********************************************************
+                    BOW n-grams n = 1, 2, 3
+*********************************************************"""
+
+vectorizer = CountVectorizer(ngram_range=(1, 3))
+vectorizer.fit(data_train["text"])
+x_train = vectorizer.transform(data_train["text"])
+x_test = vectorizer.transform(data_test["text"])
+
+# 9. Fitting BOW into Logistic regression
+print("\n LogisticRegression [BOW n-gram; n <= 3], reg[C=0.01]")
+model = LogisticRegression(C=0.01, random_state=0, max_iter=1000).fit(x_train, y_train)
+
+print("\n Model score [BOW n-gram; n <=3]")
 print("training set score: ", model.score(x_train, y_train))
 print("testing set score:  ", model.score(x_test, y_test))
 
