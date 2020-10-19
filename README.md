@@ -23,10 +23,10 @@ The graded part of the assignment is solved in the following files:
 Other files (not included in the report): 
 
 1. `word_cloud.py` : Includes a separate WordCloud, and the use of Polarity and Subjectivity as input features for the model. 
-However, since their inclusion didn't improve the performance of the model was not included in the report.
+However, since they didn't improve the performance of the model was not included in the report.
 
 2. `SVM_test.py`: Tuning the hyper-parameters was tricky and more formal strategies are required, probably a Grid Search. 
 
-3. `NN_test.py`: a better hidden layer selection was required, therefore didn't beat the current Logistic Regression in precision or computational time.
+3. `NN_test.py`: A better hidden layer selection was required, therefore didn't beat the current Logistic Regression in precision or computational time.
 
 4. `naive_bayes_test.py`: only used the hand-chosen features, a memory error appears when using Bag-of-words, and struggled to transform from parse to dense matrix. 
