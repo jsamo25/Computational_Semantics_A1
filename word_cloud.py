@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from textblob import TextBlob
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+from wordcloud import WordCloud, STOPWORDS
 
 
 """*********************************************************
