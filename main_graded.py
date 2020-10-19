@@ -34,7 +34,7 @@ negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "ch
 
 """
 # A bigger list of lexicons is provided from https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html
-# aprox. 5% in accuracy is gained, however the processing time increases significantly
+# aprox. 8% in accuracy is gained, however the processing time increases significantly
 # uncomment the following lines to use the full DB of Lexicons.
 """
 # positive_lexicons = pd.read_csv("positive-words.csv").transpose().values.squeeze()
@@ -71,9 +71,9 @@ print("\n Basic data statistics \n", data.describe())
 print("\n Average number of words", data["n_tokens"].mean())
 print("\n Average number of sentences", data["n_sentences"].mean())
 
-# 3. Rating column analysis
+# 3. Rating column plot
 plt.hist(data["rating"])
-plt.title("Rating Histogram")
+plt.title("Rating score Histogram")
 plt.grid(True)
 plt.show()
 
@@ -89,9 +89,9 @@ print("\nWords average", "\n", word_avg_per_sentiment)
     PART K. Logistic regression with hand-chosen features 
 *********************************************************"""
 print(
-    "\n ***************************************"
-    "\n    Using hand-chosen features as input"
-    "\n ***************************************"
+        "\n ***************************************"
+        "\n    Using hand-chosen features as input"
+        "\n ***************************************"
 )
 
 # 5. Focused on ["text"] derived features.
@@ -139,7 +139,7 @@ accuracy(model, x_train, y_train, x_test, y_test)
 print("\n Initial model Coefficients", model.coef_.squeeze())
 
 # 13 Changing model to use CrossValidation...
-print("\nFinal model score [hand-chosen features] and 10-f [CrossValidation]")
+print("\nFinal model score [hand-chosen features] and [10-Fold CrossValidation]")
 model = LogisticRegressionCV(cv=10, random_state=0, max_iter=1000).fit(x_train, y_train)
 accuracy(model, x_train, y_train, x_test, y_test)
 print("\nFinal model Coefficients", model.coef_.squeeze())
@@ -243,9 +243,9 @@ print_evaluation(y_test, y_pred, "hand-chosen features")
 
 
 print(
-    "\n *********************************"
-    "\n    Using BOW as feature input"
-    "\n *********************************"
+            "\n *********************************"
+            "\n    Using BOW as feature input"
+            "\n *********************************"
 )
 
 # 8. computing Bag of Words
@@ -263,7 +263,7 @@ accuracy(model, x_train, y_train, x_test, y_test)
 
 
 # 10b. increase regularization to reduce overfitting
-print("\nadjusting regularization...")
+print("\nAdjusting regularization...")
 model = LogisticRegression(max_iter=1000, C=0.01).fit(x_train, y_train)
 
 print("\nScore with stronger regularization, C=0.01")
@@ -271,10 +271,10 @@ accuracy(model, x_train, y_train, x_test, y_test)
 
 
 # 13.Using LogisticRegressionCV and stronger regularization
-print("\nChanging LR model to use CrossValidation [BOW features]")
+print("\nChanging LR model to use [CrossValidation, K=10] [BOW features]")
 model = LogisticRegressionCV(cv=10, random_state=0, max_iter=1000).fit(x_train, y_train)
 
-print("\nFinal model score [BOW features] and [CrossValidation]")
+print("\nFinal model score [BOW features] and [ 10-Fold CrossValidation]")
 accuracy(model, x_train, y_train, x_test, y_test)
 
 
@@ -295,7 +295,7 @@ plt.show()
 print_evaluation(y_test, y_pred, "BOW features")
 
 """****************************************************************
-    Part M. Format review & LR extra features. 
+            Part M. Format review & LR extra features. 
 *****************************************************************"""
 
 # 12. PEP 8 was automatically implemented after executing on terminal: $ black main_graded.py
