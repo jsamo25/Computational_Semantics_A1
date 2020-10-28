@@ -299,7 +299,7 @@ print_evaluation(y_test, y_pred, "BOW features")
 *****************************************************************"""
 
 # 12. PEP 8 was automatically implemented after executing on terminal: $ black main_graded.py
-# some recommendations were not really helping so where ignored.
+# some recommendations were not really helping so were ignored.
 
 # 13. LogisticRegression with CV: implemented.
 
