@@ -13,7 +13,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 np.set_printoptions(precision=2)
 pd.set_option("display.max_columns", 10)
 
-data = pd.read_csv("sentiment.csv")
+data = pd.read_csv("data/sentiment.csv")
 data["sentiment"] = data["sentiment"] == "pos"
 data["sentiment"] = data["sentiment"].astype("bool")
 

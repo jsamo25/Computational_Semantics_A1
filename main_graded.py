@@ -18,7 +18,7 @@ from wordcloud import WordCloud, STOPWORDS
 np.set_printoptions(precision=2)
 pd.set_option("display.max_columns", 10)
 
-data = pd.read_csv("sentiment.csv")
+data = pd.read_csv("data/sentiment.csv")
 data["sentiment"] = data["sentiment"] == "pos"
 data["sentiment"] = data["sentiment"].astype("bool")
 
@@ -37,8 +37,8 @@ negative_lexicons = ["abominable", "anger", "anxious", "bad", "catastrophe", "ch
 # aprox. 8% in accuracy is gained, however the processing time increases significantly
 # uncomment the following lines to use the full DB of Lexicons.
 """
-# positive_lexicons = pd.read_csv("positive-words.csv").transpose().values.squeeze()
-# negative_lexicons = pd.read_csv("negative-words.csv").transpose().values.squeeze()
+# positive_lexicons = pd.read_csv("data/positive-words.csv").transpose().values.squeeze()
+# negative_lexicons = pd.read_csv("data/negative-words.csv").transpose().values.squeeze()
 
 
 """*********************************************************

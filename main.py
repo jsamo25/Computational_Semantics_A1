@@ -17,10 +17,10 @@ pd.set_option("display.max_columns", 10)
 #TODO: also, not sure if i took the right approach, since not using a Boolean condition, but an if-rule instead.
 def TRIAL(value):
     if value == 1:
-        data = pd.read_csv("sentiment.csv")
+        data = pd.read_csv("data/sentiment.csv")
         print("WARNING: Using full data set")
     else:
-        data = pd.read_csv("sentiment10.csv")
+        data = pd.read_csv("data/sentiment10.csv")
         print("Using sample data set")
     return data
 
