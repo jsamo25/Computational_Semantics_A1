@@ -1,8 +1,6 @@
-import numpy as np
 import pandas as pd
 
 from sklearn import svm
-from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -12,7 +10,7 @@ from matplotlib.colors import Normalize
                     Loading Data
 *********************************************************"""
 
-data = pd.read_csv("sentiment.csv")
+data = pd.read_csv("data/sentiment.csv")
 data["sentiment"] = data["sentiment"] == "pos"
 data["sentiment"] = data["sentiment"].astype("bool")
 

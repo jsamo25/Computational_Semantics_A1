@@ -1,17 +1,13 @@
 import pandas as pd
-from pdb import set_trace
 
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
-import statsmodels.api as sm
-
 
 """ PART I: Bag of words representations as features """
 #TODO: read --> https://en.wikipedia.org/wiki/Bag-of-words_model
 #65 import data  & turn sentiment column into a boolean representation.
-data = pd.read_csv("sentiment.csv")
+data = pd.read_csv("data/sentiment.csv")
 data["sentiment"] = data["sentiment"] == "pos"
 data["sentiment"] = data["sentiment"].astype("bool") #assign boolean values to sentiment column
 

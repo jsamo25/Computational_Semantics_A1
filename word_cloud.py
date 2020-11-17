@@ -12,7 +12,7 @@ from wordcloud import WordCloud, STOPWORDS
                     Loading Data
 *********************************************************"""
 
-data = pd.read_csv("sentiment.csv")
+data = pd.read_csv("data/sentiment.csv")
 
 
 def preprocess(text):
